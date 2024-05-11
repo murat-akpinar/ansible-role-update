@@ -18,13 +18,21 @@
 
 - name: Red Hat paketlerini sırayla yükselt
   yum:
-    name: "{{ item }}"
+    name: "{{ item.split('.')[0] }}"
     state: latest
-  loop: "{{ redhat_upgrades.stdout_lines | map('regex_search', '^([^\/]+)\/') | select('string') | list }}"
+  loop: "{{ redhat_upgrades.stdout_lines[1:] | map('split', '.') | map('first') | list }}"
   when: "'redhat' in group_names"
   register: redhat_upgrade_results
+  notify:
+    - Paket yükseltildi (Red Hat)
 
 - name: Red Hat yükseltme sonuçlarını göster
   debug:
     var: redhat_upgrade_results
+  when: "'redhat' in group_names"
+
+- name: Paket yükseltildi (Red Hat)
+  debug:
+    msg: "Paket '{{ item }}' başarıyla yükseltildi."
+  with_items: "{{ redhat_upgrade_results.results | map(attribute='item') | list }}"
   when: "'redhat' in group_names"

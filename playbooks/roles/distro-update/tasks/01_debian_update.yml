@@ -20,11 +20,19 @@
   apt:
     name: "{{ item.split('/')[0] }}"
     state: latest
-  loop: "{{ debian_upgrades.stdout_lines | map('regex_search', '^([^\/]+)') | select('string') | list }}"
+  loop: "{{ debian_upgrades.stdout_lines[1:] | map('split', '/') | map('first') | list }}"
   when: "'debian' in group_names"
   register: debian_upgrade_results
+  notify:
+    - Paket yükseltildi (Debian)
 
 - name: Debian yükseltme sonuçlarını göster
   debug:
     var: debian_upgrade_results
+  when: "'debian' in group_names"
+
+- name: Paket yükseltildi (Debian)
+  debug:
+    msg: "Paket '{{ item }}' başarıyla yükseltildi."
+  with_items: "{{ debian_upgrade_results.results | map(attribute='item') | list }}"
   when: "'debian' in group_names"
