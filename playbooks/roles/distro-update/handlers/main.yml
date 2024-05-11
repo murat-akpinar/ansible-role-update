@@ -1,10 +1,6 @@
 ---
 
-- name: Paket yükseltildi (Debian)
+- name: Paket yükseltildi
   debug:
     msg: "Paket yükseltme işlemi tamamlandı. Paket: {{ item }}"
 
-
-- name: Paket yükseltildi (Red Hat)
-  debug:
-    msg: "Paket yükseltme işlemi tamamlandı. Paket: {{ item }}"
