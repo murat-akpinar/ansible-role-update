@@ -20,7 +20,7 @@
   yum:
     name: "{{ item }}"
     state: latest
-  loop: "{{ redhat_upgrades.stdout_lines | map('regex_search', '^([^\.]+)') | select('string') | list }}"
+  loop: "{{ redhat_upgrades.stdout_lines | map('regex_search', '^([^\/]+)\/') | select('string') | list }}"
   when: "'redhat' in group_names"
   register: redhat_upgrade_results
 
