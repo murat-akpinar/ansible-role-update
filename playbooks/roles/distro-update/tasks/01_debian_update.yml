@@ -18,9 +18,9 @@
 
 - name: Debian paketlerini sırayla yükselt
   apt:
-    name: "{{ item }}"
+    name: "{{ item.split('/')[0] }}"
     state: latest
-  loop: "{{ debian_upgrades.stdout_lines | map('regex_search', '^([^\/]+)\/') | select('string') | list }}"
+  loop: "{{ debian_upgrades.stdout_lines | map('regex_search', '^([^\/]+)') | select('string') | list }}"
   when: "'debian' in group_names"
   register: debian_upgrade_results
 
