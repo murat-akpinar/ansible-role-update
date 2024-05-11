@@ -1,0 +1,30 @@
+# Debian Sistemleri İçin Görevler
+---
+
+- name: Debian sistemlerini güncelle
+  apt:
+    update_cache: yes
+  when: "'debian' in group_names"
+
+- name: Debian'da yükseltilebilir paketleri listele
+  command: apt list --upgradable
+  register: debian_upgrades
+  when: "'debian' in group_names"
+
+- name: Debian'da yükseltilebilir paketleri göster
+  debug:
+    msg: "{{ debian_upgrades.stdout }}"
+  when: "'debian' in group_names"
+
+- name: Debian paketlerini sırayla yükselt
+  apt:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ debian_upgrades.stdout_lines | map('regex_search', '^([^\/]+)\/') | select('string') | list }}"
+  when: "'debian' in group_names"
+  register: debian_upgrade_results
+
+- name: Debian yükseltme sonuçlarını göster
+  debug:
+    var: debian_upgrade_results
+  when: "'debian' in group_names"

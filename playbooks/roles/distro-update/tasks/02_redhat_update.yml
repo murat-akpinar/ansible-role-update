@@ -1,0 +1,30 @@
+# Red Hat Sistemleri İçin Görevler
+---
+
+- name: Red Hat sistemlerini güncelle
+  yum:
+    update_cache: yes
+  when: "'redhat' in group_names"
+
+- name: Red Hat'da yükseltilebilir paketleri listele
+  command: yum list updates
+  register: redhat_upgrades
+  when: "'redhat' in group_names"
+
+- name: Red Hat'da yükseltilebilir paketleri göster
+  debug:
+    msg: "{{ redhat_upgrades.stdout }}"
+  when: "'redhat' in group_names"
+
+- name: Red Hat paketlerini sırayla yükselt
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ redhat_upgrades.stdout_lines | map('regex_search', '^([^\.]+)') | select('string') | list }}"
+  when: "'redhat' in group_names"
+  register: redhat_upgrade_results
+
+- name: Red Hat yükseltme sonuçlarını göster
+  debug:
+    var: redhat_upgrade_results
+  when: "'redhat' in group_names"
