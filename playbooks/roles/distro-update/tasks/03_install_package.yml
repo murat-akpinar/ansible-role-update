@@ -1,0 +1,37 @@
+# Install Package 
+---
+# Debian
+- name: "Debian: Paketin yüklü olup olmadığını kontrol et"
+  apt:
+    name: "{{ package_name }}"
+    state: present
+  when: "'debian' in group_names"
+  register: debian_install_result
+
+- name: "Debian: Paket yüklü mü kontrol et"
+  debug:
+    msg: "Debian: Paket '{{ package_name }}' zaten yüklü."
+  when: debian_install_result.changed == false
+
+- name: "Debian: Paket yüklenmesi sonucu"
+  debug:
+    msg: "Debian: Paket '{{ package_name }}' başarıyla yüklendi."
+  when: debian_install_result.changed == true
+
+# RedHat
+- name: "Red Hat: Paketin yüklü olup olmadığını kontrol et"
+  yum:
+    name: "{{ package_name }}"
+    state: present
+  when: "'redhat' in group_names"
+  register: redhat_install_result
+
+- name: "Red Hat: Paket yüklü mü kontrol et"
+  debug:
+    msg: "Red Hat: Paket '{{ package_name }}' zaten yüklü."
+  when: redhat_install_result.changed == false
+
+- name: "Red Hat: Paket yüklenmesi sonucu"
+  debug:
+    msg: "Red Hat: Paket '{{ package_name }}' başarıyla yüklendi."
+  when: redhat_install_result.changed == true

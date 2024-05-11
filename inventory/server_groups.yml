@@ -11,6 +11,7 @@ all:
       vars:
         ansible_user: 'root'
         ansible_connection: 'ssh'
+        package_name: "sl"
     
     redhat:
       hosts:
@@ -21,3 +22,4 @@ all:
       vars:
         ansible_user: 'root'
         ansible_connection: 'ssh'
+        package_name: "sl"

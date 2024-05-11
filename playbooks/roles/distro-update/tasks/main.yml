@@ -1,8 +1,13 @@
 # Steps by Step
 ---
 
-- name: "Ubuntu" 
+- name: "Ubuntu Update" 
   ansible.builtin.import_tasks: 01_debian_update.yml
 
-- name: "RedHat" 
+- name: "RedHat Update" 
   ansible.builtin.import_tasks: 02_redhat_update.yml
+
+- name: "Install Package" 
+  ansible.builtin.import_tasks: 03_install_package.yml
+
+
