@@ -1,22 +1,22 @@
 # Red Hat Sistemleri İçin Görevler
 ---
 
-- name: Red Hat sistemlerini güncelle
+- name: Update Red Hat systems
   yum:
     update_cache: yes
   when: "'redhat' in group_names"
 
-- name: Red Hat'da yükseltilebilir paketleri listele
+- name: List upgradeable packages in Red Hat
   command: yum list updates
   register: redhat_upgrades
   when: "'redhat' in group_names"
 
-- name: Red Hat'da yükseltilebilir paketleri göster
+- name: Show upgradable packages on Red Hat
   debug:
     msg: "{{ redhat_upgrades.stdout }}"
   when: "'redhat' in group_names"
 
-- name: Red Hat paketlerini sırayla yükselt
+- name: Upgrade Red Hat packages in order
   yum:
     name: "{{ item.split('.')[0] }}"
     state: latest
@@ -26,12 +26,12 @@
   notify:
     - Paket yükseltildi (Red Hat)
 
-- name: Red Hat yükseltme sonuçlarını göster
+- name: Show Red Hat upgrade results
   debug:
     var: redhat_upgrade_results
   when: "'redhat' in group_names"
 
-- name: Paket yükseltildi (Red Hat)
+- name: Package upgraded (Red Hat)
   debug:
     msg: "Paket '{{ item }}' başarıyla yükseltildi."
   with_items: "{{ redhat_upgrade_results.results | map(attribute='item') | list }}"

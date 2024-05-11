@@ -1,22 +1,22 @@
 # Debian Sistemleri İçin Görevler
 ---
 
-- name: Debian sistemlerini güncelle
+- name: Update Debian systems
   apt:
     update_cache: yes
   when: "'debian' in group_names"
 
-- name: Debian'da yükseltilebilir paketleri listele
+- name: List upgradeable packages in Debian
   command: apt list --upgradable
   register: debian_upgrades
   when: "'debian' in group_names"
 
-- name: Debian'da yükseltilebilir paketleri göster
+- name: Show upgradable packages in Debian
   debug:
     msg: "{{ debian_upgrades.stdout }}"
   when: "'debian' in group_names"
 
-- name: Debian paketlerini sırayla yükselt
+- name: Upgradeable packages in DebianShow Debian packages upgrade in order
   apt:
     name: "{{ item.split('/')[0] }}"
     state: latest
@@ -26,12 +26,12 @@
   notify:
     - Paket yükseltildi (Debian)
 
-- name: Debian yükseltme sonuçlarını göster
+- name: Show Debian upgrade results
   debug:
     var: debian_upgrade_results
   when: "'debian' in group_names"
 
-- name: Paket yükseltildi (Debian)
+- name: Package upgraded (Debian)
   debug:
     msg: "Paket '{{ item }}' başarıyla yükseltildi."
   with_items: "{{ debian_upgrade_results.results | map(attribute='item') | list }}"
