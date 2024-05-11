@@ -11,6 +11,11 @@
   register: debian_upgrades
   when: "'debian' in group_names"
 
+- name: Debian'da yükseltilebilir paketleri göster
+  debug:
+    msg: "{{ debian_upgrades.stdout }}"
+  when: "'debian' in group_names"
+
 - name: Upgradeable packages in DebianShow Debian packages upgrade in order
   apt:
     name: "{{ item.split('/')[0] }}"
