@@ -1,38 +1,34 @@
 # Red Hat Sistemleri İçin Görevler
 ---
 
-- name: Update Red Hat systems
+- name: Red Hat sistemlerini güncelle
   yum:
     update_cache: yes
   when: "'redhat' in group_names"
 
-- name: List upgradeable packages in Red Hat
-  command: yum list updates
+- name: Red Hat'da yükseltilebilir paketleri listele
+  yum:
+    list: updates
   register: redhat_upgrades
   when: "'redhat' in group_names"
 
-- name: Show upgradable packages on Red Hat
+- name: Paket güncellenmeden önce bilgi ver (Red Hat)
   debug:
-    msg: "{{ redhat_upgrades.stdout }}"
+    msg: "Paket '{{ item }}' güncelleniyor..."
+  loop: "{{ redhat_upgrades.results | map(attribute='name') | list }}"
   when: "'redhat' in group_names"
 
-- name: Upgrade Red Hat packages in order
+- name: Red Hat paketlerini sırayla yükselt
   yum:
-    name: "{{ item.split('.')[0] }}"
+    name: "{{ item }}"
     state: latest
-  loop: "{{ redhat_upgrades.stdout_lines[1:] | map('split', '.') | map('first') | list }}"
+  loop: "{{ redhat_upgrades.results | map(attribute='name') | list }}"
   when: "'redhat' in group_names"
   register: redhat_upgrade_results
   notify:
     - Paket yükseltildi (Red Hat)
 
-- name: Show Red Hat upgrade results
+- name: Red Hat yükseltme sonuçlarını göster
   debug:
     var: redhat_upgrade_results
-  when: "'redhat' in group_names"
-
-- name: Package upgraded (Red Hat)
-  debug:
-    msg: "Paket '{{ item }}' başarıyla yükseltildi."
-  with_items: "{{ redhat_upgrade_results.results | map(attribute='item') | list }}"
   when: "'redhat' in group_names"
