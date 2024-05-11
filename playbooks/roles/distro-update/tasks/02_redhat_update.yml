@@ -26,7 +26,7 @@
   when: "'redhat' in group_names"
   register: redhat_upgrade_results
   notify:
-    - Paket yükseltildi (Red Hat)
+    - Package upgraded
 
 - name: Show RedHat upgrade results
   debug:

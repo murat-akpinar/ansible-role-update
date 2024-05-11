@@ -3,9 +3,11 @@
 
 - name: "Ubuntu Update" 
   ansible.builtin.import_tasks: 01_debian_update.yml
+  when: "'debian' in group_names"
 
 - name: "RedHat Update" 
   ansible.builtin.import_tasks: 02_redhat_update.yml
+  when: "'redhat' in group_names"
 
 - name: "Install Package" 
   ansible.builtin.import_tasks: 03_install_package.yml

@@ -19,7 +19,7 @@
   when: "'debian' in group_names"
   register: debian_upgrade_results
   notify:
-    - Paket yükseltildi (Debian)
+    - Package upgraded
 
 - name: Show Debian upgrade results
   debug:

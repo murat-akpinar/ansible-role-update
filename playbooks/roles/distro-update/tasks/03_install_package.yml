@@ -1,32 +1,46 @@
 # Install Package 
 ---
-# Debian
-- name: "Debian: Paketin yüklü olup olmadığını kontrol et"
+
+# Tasks for Debian Systems
+- name: "Check if the package is installed on Debian"
   apt:
     name: "{{ package_name }}"
     state: present
   when: "'debian' in group_names"
   register: debian_install_result
 
-- name: "Debian: Paket yüklü mü kontrol et"
+- name: "Debian: Check if the package is already installed"
   debug:
     msg: "Debian: Paket '{{ package_name }}' zaten yüklü."
-  when: debian_install_result.changed == false
+  when:
+    - "'debian' in group_names"
+    - debian_install_result.changed == false
 
-# RedHat
-- name: "Red Hat: Paketin yüklü olup olmadığını kontrol et"
+- name: "Debian: Package installation result"
+  debug:
+    msg: "Debian: Paket '{{ package_name }}' başarıyla yüklendi."
+  when:
+    - "'debian' in group_names"
+    - debian_install_result.changed == true
+
+# Tasks for Red Hat Systems
+- name: "Check if the package is installed on Red Hat"
   yum:
     name: "{{ package_name }}"
     state: present
   when: "'redhat' in group_names"
   register: redhat_install_result
 
-- name: "Red Hat: Paket yüklü mü kontrol et"
+- name: "Red Hat: Check if the package is already installed"
   debug:
     msg: "Red Hat: Paket '{{ package_name }}' zaten yüklü."
-  when: redhat_install_result.changed == false
+  when:
+    - "'redhat' in group_names"
+    - redhat_install_result.changed == false
 
-- name: "Red Hat: Paket yüklenmesi sonucu"
+- name: "Red Hat: Package installation result"
   debug:
     msg: "Red Hat: Paket '{{ package_name }}' başarıyla yüklendi."
-  when: redhat_install_result.changed == true
+  when:
+    - "'redhat' in group_names"
+    - redhat_install_result.changed == true
