@@ -13,11 +13,6 @@
     msg: "Debian: Paket '{{ package_name }}' zaten yüklü."
   when: debian_install_result.changed == false
 
-- name: "Debian: Paket yüklenmesi sonucu"
-  debug:
-    msg: "Debian: Paket '{{ package_name }}' başarıyla yüklendi."
-  when: debian_install_result.changed == true
-
 # RedHat
 - name: "Red Hat: Paketin yüklü olup olmadığını kontrol et"
   yum:

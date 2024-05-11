@@ -1,24 +1,24 @@
 # Red Hat Update & Upgrade
 ---
 
-- name: Red Hat sistemlerini güncelle
+- name: Update RedHat systems
   yum:
     update_cache: yes
   when: "'redhat' in group_names"
 
-- name: Red Hat'da yükseltilebilir paketleri listele
+- name: List upgradeable packages in RedHat
   yum:
     list: updates
   register: redhat_upgrades
   when: "'redhat' in group_names"
 
-- name: Paket güncellenmeden önce bilgi ver (Red Hat)
+- name: Show upgradable packages in RedHat
   debug:
     msg: "Paket '{{ item }}' güncelleniyor..."
   loop: "{{ redhat_upgrades.results | map(attribute='name') | list }}"
   when: "'redhat' in group_names"
 
-- name: Red Hat paketlerini sırayla yükselt
+- name: Upgrade RedHat packages in order
   yum:
     name: "{{ item }}"
     state: latest
@@ -28,7 +28,7 @@
   notify:
     - Paket yükseltildi (Red Hat)
 
-- name: Red Hat yükseltme sonuçlarını göster
+- name: Show RedHat upgrade results
   debug:
     var: redhat_upgrade_results
   when: "'redhat' in group_names"
