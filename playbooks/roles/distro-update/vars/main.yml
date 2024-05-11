@@ -1,1 +1,3 @@
-ansible_user: root
+ansible_user: 'root'
+ansible_password: 'admin'
+ansible_connection: 'ssh'
