@@ -1,0 +1,44 @@
+# Steps by Step
+---
+
+- name: Debian sistemlerini güncelle
+  apt:
+    update_cache: yes
+  when: "'debian' in group_names"
+
+- name: Debian'da yükseltilebilir paketleri listele
+  command: apt list --upgradable
+  register: debian_upgrades
+  when: "'debian' in group_names"
+
+- name: Debian'da yükseltilebilir paketleri göster
+  debug:
+    msg: "{{ debian_upgrades.stdout }}"
+  when: "'debian' in group_names"
+
+- name: Debian paketlerini yükselt
+  apt:
+    upgrade: dist
+  when: "'debian' in group_names"
+
+# Red Hat Sistemleri İçin Görevler
+- name: Red Hat sistemlerini güncelle
+  yum:
+    update_cache: yes
+  when: "'redhat' in group_names"
+
+- name: Red Hat'da yükseltilebilir paketleri listele
+  command: yum list updates
+  register: redhat_upgrades
+  when: "'redhat' in group_names"
+
+- name: Red Hat'da yükseltilebilir paketleri göster
+  debug:
+    msg: "{{ redhat_upgrades.stdout }}"
+  when: "'redhat' in group_names"
+
+- name: Red Hat paketlerini yükselt
+  yum:
+    name: '*'
+    state: latest
+  when: "'redhat' in group_names"
