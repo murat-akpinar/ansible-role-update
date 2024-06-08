@@ -18,9 +18,9 @@
 
 - name: Upgrade Debian packages in order
   apt:
-    name: "{{ item.split('/')[0] }}"
+    name: "{{ item }}"
     state: latest
-  loop: "{{ debian_upgrades.stdout_lines[1:] | map('split', '/') | map('first') | list }}"
+  loop: "{{ debian_upgrades.stdout_lines[1:] | map('regex_replace', '\/.*', '') | list }}"
   when: "'debian' in group_names"
   register: debian_upgrade_results
   notify:
